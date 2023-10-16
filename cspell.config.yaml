@@ -1,0 +1,27 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - duotrigintillion
+  - duovigintillion
+  - novemdecillion
+  - novemvigintillion
+  - Numberoo
+  - octovigintillion
+  - Peckham
+  - quattuor
+  - quattuorvigintillion
+  - quindecillion
+  - quinvigintillion
+  - septen
+  - sexvigintillion
+  - tailwindcss
+  - trevigintillion
+  - trigintillion
+  - undecillion
+  - untrigintillion
+  - unvigintillion
+  - vigintillion
+ignoreWords: []
+import: []

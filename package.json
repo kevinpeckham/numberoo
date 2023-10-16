@@ -1,7 +1,7 @@
 {
 	"author": "Kevin Peckham",
-	"name": "lj-sveltekit-ts-tailwind-pug-starter",
-	"version": "1.0.10",
+	"name": "numberoo",
+	"version": "1.0.1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/lightning-jar/svelte-typescript-tailwind-pug-starter"
@@ -9,7 +9,6 @@
 	"devDependencies": {
 		"@playwright/test": "^1.37.1",
 		"@prettier/plugin-pug": "^3.0.0",
-		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@sveltejs/kit": "^1.25.1",
 		"@typescript-eslint/eslint-plugin": "^6.7.3",
@@ -33,15 +32,8 @@
 		"vitest": "^0.34.6"
 	},
 	"type": "module",
-	"description": "A Svelte, Typescript, Tailwindcss, & Pug starter template",
+	"description": "Convert number to words",
 	"homepage": "https://skinnypug.dev",
-	"keywords": [
-		"Svelte",
-		"Typescript",
-		"TailwindCSS",
-		"Pug",
-		"Starter"
-	],
 	"license": "MIT",
 	"private": true,
 	"scripts": {
