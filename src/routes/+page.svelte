@@ -77,13 +77,13 @@
 	let output = 'one';
 	let digitCounter = '1';
 
+	// when input changes, update inputEl value
+	$: if (inputEl) inputEl.textContent = '8';
+
 	// refs
 	let shim: HTMLDivElement;
+	let inputEl: HTMLTextAreaElement;
 
-	$: logOutput = 'test'
-	function log(str: string) {
-		logOutput = str;
-	}
 
 	function scrubInput(str: string) {
 
@@ -266,12 +266,15 @@
 		)
 
 	//- body
-	main.relative.grid.grid-cols-1.min-h-screen.p-4.w-screen(class="items-start pt-0 sm:p-4 sm:pt-0 sm:place-content-center")
+	main.relative.grid.grid-cols-4.min-h-screen.p-4.w-screen(class="items-start pt-0 sm:p-4 sm:pt-0 sm:place-content-center")
 
+		.mb-4.pt-4(class="sm:pl-8 sm:absolute")
+			h1.text-3xl.font-bold.text-blue-300.mb-2 Numberoo
+			div.opacity-95.italic read and spell numbers up to one googol
 
-				.mb-4.pt-4(class="sm:pl-8 sm:absolute")
-					h1.text-3xl.font-bold.text-blue-300.mb-2 Numberoo
-					div.opacity-95.italic read and spell numbers up to one googol
+		//- left column
+		.col-span-3
+
 
 				//- input
 				.w-full.flex.justify-center.text-center.pb-4.h-auto(class="min-h-[1em]")
@@ -281,7 +284,8 @@
 							aria-label="input number",
 							auto-focus="true",
 							autocomplete="off",
-							value!="1",
+							bind:this!="{inputEl}",
+
 							class="bg-red-100/10 text-red-500 border-white/20 outline-none min-h-[1em] placeholder:whitespace-nowrap placeholder:text-18",
 							placeholder="enter number",
 							type="text"
@@ -289,7 +293,7 @@
 							on:keydown!="{onKeydown}"
 							resize="none"
 							style!="resize:none; min-width:6ch; min-height:1em;"
-						)
+						) 1
 						div.pointer-events-none.align-text-bottom.h-fit.w-fit.text-center.break-words.px-4.rounded(
 							class="bg-blue-500/10 min-w-[6ch] min-h-[1.375em]"
 							bind:this!="{shim}"
@@ -300,6 +304,31 @@
 
 				//- digit counter
 				div.absolute.bottom-8.text-yellow-600.pl-4 # digits: { digitCounter }
+
+		//- right column
+		div
+			.grid.grid-cols-3.gap-x-4.gap-y-2
+				+each('Array(9) as n, index')
+					button.rounded-full.border.aspect-square.flex.justify-center.items-center(
+						on:click!="{() => {input = `${input}${index + 1}`; inputEl.focus();}}"
+						class="hover:bg-white/5 transition-colors active:bg-white") { index + 1 }
+
+				//- backspace
+				button.text-red-500.rounded-full.border.border-red-500.aspect-square.flex.justify-center.items-center(
+					on:click!="{() => {input = input.slice(0, -1); inputEl.focus();}}"
+					class="hover:bg-red-500/5 transition-colors active:bg-red-500"
+				) {`<`}
+
+				//- zero
+				button.rounded-full.border.aspect-square.flex.justify-center.items-center(
+					on:click!="{() => {inputEl.textContent = '7'; inputEl.focus();}}"
+					class="hover:bg-white/5 transition-colors active:bg-white") 0
+
+				//- clear
+				button.text-red-500.rounded-full.border.border-red-500.aspect-square.flex.justify-center.items-center(
+					on:click!="{() => {input = ``; output = ``; inputEl.focus();}}"
+					class="hover:bg-red-500/5 transition-colors active:bg-red-500"
+				) {`c`}
 
 
 </template>
