@@ -1,21 +1,30 @@
 <!--
 @component
 An <a> styled to look like a button.
-* prop targetUrl: string  -- link target url
-* prop title: string -- link title
-* slot (default) -- link text
+- prop href: string -- link target url
+- prop title: string -- link title
+- prop class: string -- extra classes for the wrapper
+- children -- link text
 -->
 <script lang="ts">
-export let targetUrl = "#";
-export let title = "";
+// types
+import type { Snippet } from "svelte";
+
+interface Props {
+	href?: string;
+	title?: string;
+	class?: string;
+	children?: Snippet;
+}
+let { href = "#", title = "", class: classes = "", children }: Props = $props();
 </script>
 
-<div class="mb-16 w-full sm:mb-24">
+<div class="w-full {classes}">
 	<a
 		class="text-[15px] inline-block rounded bg-transparent px-4 py-2 outline outline-1 outline-neutral-50 transition-all hover:bg-accent hover:text-primary hover:outline-transparent"
-		href={targetUrl}
+		{href}
 		{title}
 	>
-		<slot />
+		{@render children?.()}
 	</a>
 </div>

@@ -17,6 +17,7 @@ const config = {
 	},
 	compilerOptions: {
 		discloseVersion: false,
+		runes: true,
 	},
 };
 
