@@ -170,21 +170,21 @@
 	// function to translate the ones place digit and terminology of a three-digit number
 	// (e.g. '123') -> ['three', '3']
 	function translate0Digit(str: string) {
-		const digit = str ? str[str.length - 1] : '' ?? '';
+		const digit = str ? str[str.length - 1] : '';
 		const term = digit ? numbers[digit] : '';
 		return [term, digit];
 	}
 	// function to translate the tens place digit and terminology of a three-digit number
 	// (e.g. '123') -> ['twenty', '2']
 	function translate00Digit(str: string) {
-		const digit = str ? str[str.length - 2] : '' ?? '';
+		const digit = str ? str[str.length - 2] : '';
 		const term = digit ? numbers[digit + '0'] : '';
 		return [term, digit];
 	}
 	// function to translate the hundreds place digit of a three-digit number
 	// (e.g. '123') -> ['one', '1']
 	function translate000Digit(str: string) {
-		const digit = str ? str[str.length - 3] : '' ?? '';
+		const digit = str ? str[str.length - 3] : '';
 		const term = digit ? numbers[digit] : '';
 		return [term, digit];
 	}
@@ -275,13 +275,13 @@
 		<div class="w-full flex justify-center text-center pb-4 h-auto min-h-[1em]">
 			<!-- container -->
 			<div
-				class="relative align-text-bottom text-24 flex justify-center items-end h-full leading-snug sm:text-36 max-w-[90vw]"
+				class="relative align-text-bottom text-[24px] flex justify-center items-end h-full leading-snug sm:text-[36px] max-w-[90vw]"
 			>
 				<textarea
 					aria-label="input number"
 					autocomplete="off"
 					bind:this={inputEl}
-					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full bg-red-100/10 text-red-500 border-white/20 outline-none min-h-[1em] placeholder:whitespace-nowrap placeholder:text-18"
+					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full bg-red-100/10 text-red-500 border-white/20 outline-none min-h-[1em] placeholder:whitespace-nowrap placeholder:text-[18px]"
 					inputmode="numeric"
 					placeholder="enter number"
 					on:input={onInput}
@@ -298,7 +298,7 @@
 		</div>
 
 		<!-- output -->
-		<div class="text-26 text-center text-blue-400">&nbsp;{output}&nbsp;</div>
+		<div class="text-[26px] text-center text-blue-400">&nbsp;{output}&nbsp;</div>
 
 		<!-- digit counter -->
 		<div class="absolute bottom-8 text-yellow-600 pl-4"># digits: {digitCounter}</div>

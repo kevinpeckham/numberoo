@@ -10,7 +10,7 @@
 <div
 	class="grid h-screen w-screen grid-cols-1 place-content-center place-items-center bg-primary text-neutral-100"
 >
-	<div class="text-36 mb-2 text-accent">
+	<div class="text-[36px] mb-2 text-accent">
 		<span>{$page.status}</span>
 		<span>:&nbsp;</span>
 		<span>{$page.error?.message}</span>

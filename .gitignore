@@ -44,3 +44,5 @@ package-lock.json
 # vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+# test coverage
+coverage/

@@ -1,23 +1,22 @@
-// import adapter from "@sveltejs/adapter-auto";
-import vercel from "@sveltejs/adapter-vercel";
-import preprocess from "svelte-preprocess";
+// vercel adapter
+import { default as vercel } from "@sveltejs/adapter-vercel";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
-	preprocess: [preprocess()],
+	// Use vitePreprocess for TypeScript support
+	preprocess: vitePreprocess(),
 	kit: {
-		adapter: vercel({
-			// make explicit -- vercel does not yet support later node versions
-			runtime: "nodejs18.x",
-		}),
+		adapter: vercel(),
 		alias: {
 			$components: "./src/lib/components",
 			$data: "./src/lib/data",
 			$types: "./src/lib/types",
 			$utils: "./src/lib/utils",
 		},
+	},
+	compilerOptions: {
+		discloseVersion: false,
 	},
 };
 
