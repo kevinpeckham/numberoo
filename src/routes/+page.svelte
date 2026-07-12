@@ -119,7 +119,7 @@
 
 	};
 
-	function onInput(e: KeyboardEvent) {
+	function onInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		const value = target.value;
 
@@ -256,79 +256,106 @@
 
 </script>
 
-<template lang="pug">
-	//- head
-	svelte:head
-		title Numberoo
-		meta(
-			content="",
-			name="description"
-		)
+<svelte:head>
+	<title>Numberoo</title>
+	<meta content="" name="description" />
+</svelte:head>
 
-	//- body
-	main.relative.grid.grid-cols-1.min-h-screen.p-2.w-screen(class="items-start pt-0 sm:p-4 sm:pt-24 sm:place-content-start")
+<main
+	class="relative grid grid-cols-1 min-h-screen p-2 w-screen items-start pt-0 sm:p-4 sm:pt-24 sm:place-content-start"
+>
+	<div class="mb-4 pt-4 sm:pl-8 sm:absolute sm:flex items-baseline gap-x-4">
+		<h1 class="text-3xl font-bold text-blue-300 mb-2">Numberoo</h1>
+		<div class="hidden opacity-95 italic sm:block">read and spell numbers up to one googol</div>
+	</div>
 
-		.mb-4.pt-4(class="sm:pl-8 sm:absolute sm:flex items-baseline gap-x-4")
-			h1.text-3xl.font-bold.text-blue-300.mb-2 Numberoo
-			div.hidden.opacity-95.italic(class="sm:block") read and spell numbers up to one googol
+	<!-- left column -->
+	<div class="bg-purple-500 col-span-3">
+		<!-- input -->
+		<div class="w-full flex justify-center text-center pb-4 h-auto min-h-[1em]">
+			<!-- container -->
+			<div
+				class="relative align-text-bottom text-24 flex justify-center items-end h-full leading-snug sm:text-36 max-w-[90vw]"
+			>
+				<textarea
+					aria-label="input number"
+					autocomplete="off"
+					bind:this={inputEl}
+					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full bg-red-100/10 text-red-500 border-white/20 outline-none min-h-[1em] placeholder:whitespace-nowrap placeholder:text-18"
+					inputmode="numeric"
+					placeholder="enter number"
+					on:input={onInput}
+					on:keydown={onKeydown}
+					style="resize:none; min-width:6ch; min-height:1em;">1</textarea
+				>
+				<div
+					class="pointer-events-none align-text-bottom h-fit w-fit text-center break-words px-4 rounded bg-blue-500/10 min-w-[6ch] min-h-[1.375em]"
+					bind:this={shim}
+				>
+					{input}
+				</div>
+			</div>
+		</div>
 
-		//- left column
-		.bg-purple-500.col-span-3(class="")
+		<!-- output -->
+		<div class="text-26 text-center text-blue-400">&nbsp;{output}&nbsp;</div>
 
-				//- input
-				.w-full.flex.justify-center.text-center.pb-4.h-auto(class="min-h-[1em]")
-					//- container
-					.relative.align-text-bottom.text-24.flex.justify-center.items-end.h-full.leading-snug(class="sm:text-36 max-w-[90vw]")
-						textarea.opacity-0.absolute.bg-transparent.text-white.text-center.h-full.w-full(
-							aria-label="input number",
-							auto-focus="true",
-							autocomplete="off",
-							bind:this!="{inputEl}",
+		<!-- digit counter -->
+		<div class="absolute bottom-8 text-yellow-600 pl-4"># digits: {digitCounter}</div>
+	</div>
 
-							class="bg-red-100/10 text-red-500 border-white/20 outline-none min-h-[1em] placeholder:whitespace-nowrap placeholder:text-18",
-							inputmode="numeric",
-							placeholder="enter number",
-							type="text"
-							on:input!="{onInput}"
-							on:keydown!="{onKeydown}"
-							resize="none"
-							style!="resize:none; min-width:6ch; min-height:1em;"
-						) 1
-						div.pointer-events-none.align-text-bottom.h-fit.w-fit.text-center.break-words.px-4.rounded(
-							class="bg-blue-500/10 min-w-[6ch] min-h-[1.375em]"
-							bind:this!="{shim}"
-						) {input}
+	<!-- right column -->
+	<div
+		class="bg-red-500 w-full flex justify-center items-end pb-16 sm:absolute sm:bottom-0 sm:right-0 sm:pb-24 sm:items-end"
+	>
+		<div
+			class="grid grid-cols-3 w-full place-content-end bg-primary max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-x-4 sm:gap-y-2"
+		>
+			{#each Array(9) as _, index}
+				<button
+					class="rounded-full border aspect-square flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.5em]"
+					on:click={() => {
+						input = `${input}${index + 1}`;
+						inputEl.focus();
+					}}
+				>
+					{index + 1}
+				</button>
+			{/each}
 
-				//- output
-				div.text-26.text-center.text-blue-400 &nbsp;{output}&nbsp;
+			<!-- backspace -->
+			<button
+				class="text-red-500 rounded-full border border-red-500 aspect-square flex justify-center items-center hover:bg-red-500/5 transition-colors active:bg-red-500 border-[0.065em] text-[1.5em]"
+				on:click={() => {
+					input = input.slice(0, -1);
+					inputEl.focus();
+				}}
+			>
+				{"<"}
+			</button>
 
-				//- digit counter
-				div.absolute.bottom-8.text-yellow-600.pl-4 # digits: { digitCounter }
+			<!-- zero -->
+			<button
+				class="rounded-full border aspect-square flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.5em]"
+				on:click={() => {
+					inputEl.textContent = "7";
+					inputEl.focus();
+				}}
+			>
+				0
+			</button>
 
-		//- right column
-		div.bg-red-500.w-full.flex.justify-center.items-end.pb-16(class="sm:absolute sm:bottom-0 sm:right-0 sm:pb-24 sm:items-end")
-			.grid.grid-cols-3.w-full.place-content-end.bg-primary(class="max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-x-4 sm:gap-y-2")
-				+each('Array(9) as n, index')
-					button.rounded-full.border.aspect-square.flex.justify-center.items-center(
-						on:click!="{() => {input = `${input}${index + 1}`; inputEl.focus();}}"
-						class=" hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.5em]") { index + 1 }
-
-				//- backspace
-				button.text-red-500.rounded-full.border.border-red-500.aspect-square.flex.justify-center.items-center(
-					on:click!="{() => {input = input.slice(0, -1); inputEl.focus();}}"
-					class="hover:bg-red-500/5 transition-colors active:bg-red-500 border-[0.065em] text-[1.5em]"
-				) {`<`}
-
-				//- zero
-				button.rounded-full.border.aspect-square.flex.justify-center.items-center(
-					on:click!="{() => {inputEl.textContent = '7'; inputEl.focus();}}"
-					class="hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.5em]") 0
-
-				//- clear
-				button.text-red-500.rounded-full.border.border-red-500.aspect-square.flex.justify-center.items-center(
-					on:click!="{() => {input = ``; output = ``; inputEl.focus();}}"
-					class="hover:bg-red-500/5 transition-colors active:bg-red-500 border-[0.065em] text-[1.5em]"
-				) {`c`}
-
-
-</template>
+			<!-- clear -->
+			<button
+				class="text-red-500 rounded-full border border-red-500 aspect-square flex justify-center items-center hover:bg-red-500/5 transition-colors active:bg-red-500 border-[0.065em] text-[1.5em]"
+				on:click={() => {
+					input = ``;
+					output = ``;
+					inputEl.focus();
+				}}
+			>
+				{"c"}
+			</button>
+		</div>
+	</div>
+</main>
