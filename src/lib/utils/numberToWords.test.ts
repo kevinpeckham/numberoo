@@ -100,9 +100,7 @@ describe("numberToWords", () => {
 	});
 
 	it("tolerates commas in input", () => {
-		expect(numberToWords("1,234")).toBe(
-			"one thousand two hundred thirty-four",
-		);
+		expect(numberToWords("1,234")).toBe("one thousand two hundred thirty-four");
 	});
 
 	it("never emits doubled, leading, or trailing whitespace or hyphens", () => {
