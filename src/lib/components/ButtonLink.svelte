@@ -6,8 +6,8 @@ An <a> styled to look like a button.
 * slot (default) -- link text
 -->
 <script lang="ts">
-	export let targetUrl = "#";
-	export let title = "";
+export let targetUrl = "#";
+export let title = "";
 </script>
 
 <div class="mb-16 w-full sm:mb-24">

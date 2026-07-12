@@ -1,10 +1,10 @@
 <script lang="ts">
-	// sveltekit error page documentation here:
-	// https://kit.svelte.dev/docs/routing#error
+// sveltekit error page documentation here:
+// https://kit.svelte.dev/docs/routing#error
 
-	// import from svelte
-	import { page } from "$app/stores";
-	import ButtonLink from "$components/ButtonLink.svelte";
+// import from svelte
+import { page } from "$app/stores";
+import ButtonLink from "$components/ButtonLink.svelte";
 </script>
 
 <div
