@@ -10,6 +10,9 @@ const alias = {
 	$lib: path.resolve("./src/lib"),
 	$types: path.resolve("./src/lib/types"),
 	$utils: path.resolve("./src/lib/utils"),
+	// "uno.css" is a virtual module provided by the UnoCSS vite plugin, which
+	// isn't loaded here -- stub it so components importing it can render.
+	"uno.css": path.resolve("./test-stubs/uno.css"),
 };
 
 // Unit + integration — plain Node resolution, no Svelte plugin.
