@@ -124,6 +124,18 @@ describe("home page", () => {
 		expect(screen.getByText(/# digits: 0/)).toBeInTheDocument();
 	});
 
+	it("loads one googol when the tagline easter egg is clicked", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.click(screen.getByRole("button", { name: "one googol" }));
+
+		expect(getInput().value.replace(/,/g, "")).toBe(`1${"0".repeat(100)}`);
+		expect(screen.getByText(/# digits: 101/)).toBeInTheDocument();
+		// appears in both the tagline button and the output line
+		expect(screen.getAllByText(/one googol/)).toHaveLength(2);
+	});
+
 	it("disables the read-aloud button when there is no number", () => {
 		render(Page);
 		expect(

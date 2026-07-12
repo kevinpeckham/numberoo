@@ -2,6 +2,8 @@
 // utils
 import { addCommas, numberToWords, scrubInput } from "$utils/numberToWords";
 
+const GOOGOL_DIGITS = `1${"0".repeat(100)}`;
+
 // state: canonical digit string -- scrubbed, no commas
 let digits = $state("");
 
@@ -62,6 +64,12 @@ function clear() {
 	inputEl?.focus();
 }
 
+// easter egg: clicking "one googol" in the tagline loads a googol
+function loadGoogol() {
+	setDigits(GOOGOL_DIGITS);
+	inputEl?.focus();
+}
+
 // read the output aloud via the Web Speech API;
 // clicking while speech is in progress stops it instead
 function speakOutput() {
@@ -90,7 +98,10 @@ function speakOutput() {
 	<div class="mb-4 pt-4 sm:pl-8 sm:absolute sm:flex items-baseline gap-x-4">
 		<h1 class="text-3xl font-bold text-blue-300 mb-2">Numberoo</h1>
 		<div class="hidden opacity-95 italic sm:block">
-			read and spell numbers up to one googol
+			read and spell numbers up to <button
+				class="italic hover:text-blue-300 hover:underline underline-offset-4 transition-colors"
+				onclick={loadGoogol}>one googol</button
+			>
 		</div>
 	</div>
 
