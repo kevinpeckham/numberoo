@@ -4,7 +4,28 @@ import Page from "./+page.svelte";
 
 import { render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+// jsdom has no Web Speech API -- stub it so the read-aloud button is testable
+class FakeUtterance {
+	text: string;
+	constructor(text: string) {
+		this.text = text;
+	}
+}
+const synthMock = {
+	speaking: false,
+	speak: vi.fn(),
+	cancel: vi.fn(),
+};
+vi.stubGlobal("speechSynthesis", synthMock);
+vi.stubGlobal("SpeechSynthesisUtterance", FakeUtterance);
+
+beforeEach(() => {
+	synthMock.speaking = false;
+	synthMock.speak.mockClear();
+	synthMock.cancel.mockClear();
+});
 
 function getInput() {
 	return screen.getByRole("textbox", {
@@ -101,5 +122,36 @@ describe("home page", () => {
 
 		expect(getInput()).toHaveValue("");
 		expect(screen.getByText(/# digits: 0/)).toBeInTheDocument();
+	});
+
+	it("disables the read-aloud button when there is no number", () => {
+		render(Page);
+		expect(
+			screen.getByRole("button", { name: "read number aloud" }),
+		).toBeDisabled();
+	});
+
+	it("reads the output aloud on click", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "42");
+		await user.click(screen.getByRole("button", { name: "read number aloud" }));
+
+		expect(synthMock.speak).toHaveBeenCalledTimes(1);
+		const utterance = synthMock.speak.mock.calls[0][0] as FakeUtterance;
+		expect(utterance.text).toBe("forty-two");
+	});
+
+	it("stops speech when clicked while speaking", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "42");
+		synthMock.speaking = true;
+		await user.click(screen.getByRole("button", { name: "read number aloud" }));
+
+		expect(synthMock.cancel).toHaveBeenCalledTimes(1);
+		expect(synthMock.speak).not.toHaveBeenCalled();
 	});
 });

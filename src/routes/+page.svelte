@@ -61,6 +61,19 @@ function clear() {
 	setDigits("");
 	inputEl?.focus();
 }
+
+// read the output aloud via the Web Speech API;
+// clicking while speech is in progress stops it instead
+function speakOutput() {
+	if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+	const synth = window.speechSynthesis;
+	if (synth.speaking) {
+		synth.cancel();
+		return;
+	}
+	if (!output) return;
+	synth.speak(new SpeechSynthesisUtterance(output));
+}
 </script>
 
 <svelte:head>
@@ -111,6 +124,19 @@ function clear() {
 
 		<!-- output -->
 		<div class="text-[26px] text-center text-blue-400">&nbsp;{output}&nbsp;</div>
+
+		<!-- read aloud -->
+		<div class="flex justify-center pt-2">
+			<button
+				aria-label="read number aloud"
+				class="rounded-full border border-blue-400 text-blue-400 px-4 py-1 text-[15px] flex items-center gap-x-2 hover:bg-blue-400/10 transition-colors disabled:opacity-30 disabled:hover:bg-transparent border-[0.065em]"
+				disabled={!digits}
+				onclick={speakOutput}
+			>
+				<span aria-hidden="true">🔊</span>
+				<span>read aloud</span>
+			</button>
+		</div>
 
 		<!-- digit counter -->
 		<div class="absolute bottom-8 text-yellow-600 pl-4">
