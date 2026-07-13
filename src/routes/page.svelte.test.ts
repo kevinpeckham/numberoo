@@ -199,6 +199,26 @@ describe("home page", () => {
 		expect(getInput()).toHaveValue("9");
 	});
 
+	it("adds and subtracts one hundred", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "50");
+		await user.click(screen.getByRole("button", { name: "add one hundred" }));
+		expect(getInput()).toHaveValue("150");
+
+		await user.click(
+			screen.getByRole("button", { name: "subtract one hundred" }),
+		);
+		expect(getInput()).toHaveValue("50");
+
+		// clamps at zero
+		await user.click(
+			screen.getByRole("button", { name: "subtract one hundred" }),
+		);
+		expect(getInput()).toHaveValue("0");
+	});
+
 	it("does not decrement below zero", async () => {
 		const user = userEvent.setup();
 		render(Page);

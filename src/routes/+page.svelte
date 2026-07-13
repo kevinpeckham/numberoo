@@ -221,6 +221,14 @@ function speakOutput() {
 		>
 			<!-- increment / decrement -->
 			<div class="flex justify-center gap-4 sm:gap-x-4 text-1.25em">
+				<!-- sm+: room for bigger jumps -- kids love 100 -->
+				<button
+					aria-label="subtract one hundred"
+					class="hidden sm:flex h-2em px-3 flex-none rounded-full border justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
+					onclick={() => addToNumber(-100n)}
+				>
+					-100
+				</button>
 				<button
 					aria-label="subtract one"
 					class="aspect-square w-2em h-2em flex-none rounded-full border flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
@@ -251,6 +259,13 @@ function speakOutput() {
 					onclick={() => addToNumber(1n)}
 				>
 					+1
+				</button>
+				<button
+					aria-label="add one hundred"
+					class="hidden sm:flex h-2em px-3 flex-none rounded-full border justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
+					onclick={() => addToNumber(100n)}
+				>
+					+100
 				</button>
 
 				<!-- mobile: opens the device keyboard; the tap gesture lets
