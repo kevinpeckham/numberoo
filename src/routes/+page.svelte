@@ -158,7 +158,7 @@ function speakOutput() {
 <main
 	class="relative grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen min-h-screen w-screen items-start page-x-padding py-3 sm-py-4 place-content-start gap-y-1 sm-gap-y-4"
 >
-	<header class="grid grid-cols-[auto_auto_1fr] lg-flex items-baseline lg-items-baseline gap-x-2 sm-gap-x-4">
+	<header class="grid grid-cols-[auto_auto_1fr] lg-grid-cols-[auto_1fr_auto] items-baseline gap-x-2 sm-gap-x-4">
 		<h1 class="inline-block text-20px font-bold text-blue-300 mb-2 leading-none">
 			Numberoo
 		</h1>
