@@ -1,6 +1,11 @@
 <script lang="ts">
 // utils
-import { addCommas, numberToWords, scrubInput } from "$utils/numberToWords";
+import {
+	MAX_DIGITS,
+	addCommas,
+	numberToWords,
+	scrubInput,
+} from "$utils/numberToWords";
 
 const GOOGOL_DIGITS = `1${"0".repeat(100)}`;
 
@@ -11,12 +16,20 @@ let digits = $state("");
 const formatted = $derived(addCommas(digits));
 const output = $derived(numberToWords(digits));
 const digitCount = $derived(digits.length);
+const atMaxDigits = $derived(digitCount >= MAX_DIGITS);
 
 // refs
 let inputEl: HTMLTextAreaElement | undefined = $state();
 
+// stop any in-progress speech; reading a stale number is confusing
+function stopSpeech() {
+	if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+	if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+}
+
 // single update path shared by typing and the keypad
 function setDigits(raw: string) {
+	stopSpeech();
 	digits = scrubInput(raw);
 }
 
@@ -61,6 +74,18 @@ function backspace() {
 
 function clear() {
 	setDigits("");
+	inputEl?.focus();
+}
+
+// +1 / -1 controls; BigInt because the number can be up to a googol.
+// Clamps at zero and refuses to grow past MAX_DIGITS.
+function addToNumber(delta: bigint) {
+	const current = digits ? BigInt(digits) : 0n;
+	let next = current + delta;
+	if (next < 0n) next = 0n;
+	const nextDigits = next.toString();
+	if (nextDigits.length > MAX_DIGITS) return;
+	setDigits(nextDigits);
 	inputEl?.focus();
 }
 
@@ -150,8 +175,12 @@ function speakOutput() {
 		</div>
 
 		<!-- digit counter -->
-		<div class="absolute bottom-8 text-yellow-600 pl-4">
-			# digits: {digitCount}
+		<div
+			class="absolute bottom-8 pl-4 {atMaxDigits
+				? 'text-red-400 font-bold'
+				: 'text-yellow-600'}"
+		>
+			# digits: {digitCount}{#if atMaxDigits}&nbsp;(max){/if}
 		</div>
 	</div>
 
@@ -160,8 +189,11 @@ function speakOutput() {
 		class="w-full flex justify-center items-end pb-16 sm:absolute sm:bottom-0 sm:right-0 sm:pb-24 sm:items-end"
 	>
 		<div
-			class="grid grid-cols-3 w-full place-content-end bg-primary max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-x-4 sm:gap-y-2"
+			class="flex flex-col w-full max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-y-2"
 		>
+			<div
+				class="grid grid-cols-3 w-full place-content-end bg-primary gap-2 sm:gap-x-4 sm:gap-y-2"
+			>
 			{#each Array(9) as _, index}
 				<button
 					class="rounded-full border aspect-square flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.5em]"
@@ -196,6 +228,25 @@ function speakOutput() {
 			>
 				{"c"}
 			</button>
+			</div>
+
+			<!-- increment / decrement -->
+			<div class="flex gap-2 sm:gap-x-4">
+				<button
+					aria-label="subtract one"
+					class="flex-1 rounded-full border py-1 flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.25em]"
+					onclick={() => addToNumber(-1n)}
+				>
+					-1
+				</button>
+				<button
+					aria-label="add one"
+					class="flex-1 rounded-full border py-1 flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.25em]"
+					onclick={() => addToNumber(1n)}
+				>
+					+1
+				</button>
+			</div>
 		</div>
 	</div>
 </main>

@@ -124,6 +124,60 @@ describe("home page", () => {
 		expect(screen.getByText(/# digits: 0/)).toBeInTheDocument();
 	});
 
+	it("increments the number with +1", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "9");
+		await user.click(screen.getByRole("button", { name: "add one" }));
+
+		expect(getInput()).toHaveValue("10");
+		expect(screen.getByText(/ten/)).toBeInTheDocument();
+	});
+
+	it("decrements the number with -1", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "10");
+		await user.click(screen.getByRole("button", { name: "subtract one" }));
+
+		expect(getInput()).toHaveValue("9");
+	});
+
+	it("does not decrement below zero", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "0");
+		await user.click(screen.getByRole("button", { name: "subtract one" }));
+
+		expect(getInput()).toHaveValue("0");
+		expect(screen.getByText(/zero/)).toBeInTheDocument();
+	});
+
+	it("shows a max indicator at the digit limit", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		expect(screen.queryByText(/\(max\)/)).not.toBeInTheDocument();
+		await user.click(screen.getByRole("button", { name: "one googol" }));
+
+		expect(screen.getByText(/\(max\)/)).toBeInTheDocument();
+	});
+
+	it("stops speech when the number changes", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "42");
+		synthMock.speaking = true;
+		await user.click(screen.getByRole("button", { name: "1" }));
+
+		expect(synthMock.cancel).toHaveBeenCalled();
+		expect(getInput()).toHaveValue("421");
+	});
+
 	it("loads one googol when the tagline easter egg is clicked", async () => {
 		const user = userEvent.setup();
 		render(Page);
