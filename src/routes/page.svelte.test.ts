@@ -41,10 +41,21 @@ describe("home page", () => {
 		).toBeInTheDocument();
 	});
 
-	it("starts empty with a zero digit count", () => {
+	it("starts with a visible zero", () => {
 		render(Page);
-		expect(getInput()).toHaveValue("");
-		expect(screen.getByText(/# digits: 0/)).toBeInTheDocument();
+		expect(getInput()).toHaveValue("0");
+		expect(screen.getByText(/zero/)).toBeInTheDocument();
+		expect(screen.getByText(/# digits: 1/)).toBeInTheDocument();
+	});
+
+	it("removes the leading zero as you type", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		await user.type(getInput(), "7");
+
+		expect(getInput()).toHaveValue("7");
+		expect(screen.getByText(/seven/)).toBeInTheDocument();
 	});
 
 	it("converts typed input to words, commas, and a digit count", async () => {
@@ -116,15 +127,15 @@ describe("home page", () => {
 		expect(container.querySelector(".caret")).toBeInTheDocument();
 	});
 
-	it("clear empties the input and resets the count", async () => {
+	it("clear resets the input to zero", async () => {
 		const user = userEvent.setup();
 		render(Page);
 
 		await user.type(getInput(), "999");
 		await user.click(screen.getByRole("button", { name: "clear" }));
 
-		expect(getInput()).toHaveValue("");
-		expect(screen.getByText(/# digits: 0/)).toBeInTheDocument();
+		expect(getInput()).toHaveValue("0");
+		expect(screen.getByText(/# digits: 1/)).toBeInTheDocument();
 	});
 
 	it("focuses the input on load", () => {
@@ -141,20 +152,6 @@ describe("home page", () => {
 
 		await user.click(screen.getByRole("button", { name: "open keyboard" }));
 		expect(getInput()).toHaveFocus();
-	});
-
-	it("shows an inviting placeholder when empty", async () => {
-		const user = userEvent.setup();
-		render(Page);
-
-		expect(
-			screen.getByText("Tap to type any number here."),
-		).toBeInTheDocument();
-
-		await user.type(getInput(), "5");
-		expect(
-			screen.queryByText("Tap to type any number here."),
-		).not.toBeInTheDocument();
 	});
 
 	it("increments the number with +1", async () => {
@@ -223,11 +220,15 @@ describe("home page", () => {
 		expect(screen.getAllByText(/one googol/)).toHaveLength(2);
 	});
 
-	it("disables the read-aloud button when there is no number", () => {
+	it("reads the default zero aloud", async () => {
+		const user = userEvent.setup();
 		render(Page);
-		expect(
-			screen.getByRole("button", { name: "read number aloud" }),
-		).toBeDisabled();
+
+		await user.click(screen.getByRole("button", { name: "read number aloud" }));
+
+		expect(synthMock.speak).toHaveBeenCalledTimes(1);
+		const utterance = synthMock.speak.mock.calls[0][0] as FakeUtterance;
+		expect(utterance.text).toBe("zero");
 	});
 
 	it("reads the output aloud on click", async () => {

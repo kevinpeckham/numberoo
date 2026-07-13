@@ -87,6 +87,15 @@ export function scrubInput(raw: string): string {
 	return raw.replace(/[^0-9]/g, "").slice(0, MAX_DIGITS);
 }
 
+/**
+ * Canonical digit string for display: scrubbed, leading zeros stripped,
+ * never empty -- "" and "000" become "0", "07" becomes "7".
+ */
+export function normalizeDigits(raw: string): string {
+	const digitsOnly = raw.replace(/[^0-9]/g, "").replace(/^0+(?=\d)/, "");
+	return (digitsOnly || "0").slice(0, MAX_DIGITS);
+}
+
 /** Add US thousands separators to a digit string. "1234567" -> "1,234,567". Idempotent. */
 export function addCommas(digits: string): string {
 	const noCommas = digits.replace(/,/g, "");

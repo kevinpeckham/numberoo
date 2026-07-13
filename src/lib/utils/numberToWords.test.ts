@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
 	MAX_DIGITS,
 	addCommas,
+	normalizeDigits,
 	numberToWords,
 	scrubInput,
 } from "./numberToWords";
@@ -133,6 +134,34 @@ describe("scrubInput", () => {
 
 	it(`truncates to ${MAX_DIGITS} digits`, () => {
 		expect(scrubInput("9".repeat(200))).toHaveLength(MAX_DIGITS);
+	});
+});
+
+describe("normalizeDigits", () => {
+	it("defaults empty input to zero", () => {
+		expect(normalizeDigits("")).toBe("0");
+		expect(normalizeDigits("abc")).toBe("0");
+	});
+
+	it("collapses all-zero input to a single zero", () => {
+		expect(normalizeDigits("0")).toBe("0");
+		expect(normalizeDigits("000")).toBe("0");
+	});
+
+	it("strips leading zeros", () => {
+		expect(normalizeDigits("07")).toBe("7");
+		expect(normalizeDigits("007")).toBe("7");
+		expect(normalizeDigits("0123")).toBe("123");
+	});
+
+	it("strips non-digit characters", () => {
+		expect(normalizeDigits("1,2a3")).toBe("123");
+	});
+
+	it(`truncates to ${MAX_DIGITS} digits after stripping zeros`, () => {
+		const googol = `1${"0".repeat(100)}`;
+		expect(normalizeDigits(`000${googol}`)).toBe(googol);
+		expect(normalizeDigits("9".repeat(200))).toHaveLength(MAX_DIGITS);
 	});
 });
 

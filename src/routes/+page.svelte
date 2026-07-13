@@ -3,14 +3,14 @@
 import {
 	MAX_DIGITS,
 	addCommas,
+	normalizeDigits,
 	numberToWords,
-	scrubInput,
 } from "$utils/numberToWords";
 
 const GOOGOL_DIGITS = `1${"0".repeat(100)}`;
 
-// state: canonical digit string -- scrubbed, no commas
-let digits = $state("");
+// state: canonical digit string -- scrubbed, no leading zeros, never empty
+let digits = $state("0");
 
 // derived display values
 const formatted = $derived(addCommas(digits));
@@ -33,10 +33,10 @@ function stopSpeech() {
 	if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
 }
 
-// single update path shared by typing and the keypad
+// single update path shared by typing and the controls
 function setDigits(raw: string) {
 	stopSpeech();
-	digits = scrubInput(raw);
+	digits = normalizeDigits(raw);
 }
 
 function onInput(e: Event) {
@@ -175,7 +175,6 @@ function speakOutput() {
 					bind:this={inputEl}
 					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full border-white/20 outline-none resize-none min-w-full min-w-1em leading-snug"
 					inputmode="numeric"
-					placeholder="type any number"
 					oninput={onInput}
 					onkeydown={onKeydown}
 					value={formatted}
@@ -183,14 +182,7 @@ function speakOutput() {
 				<div
 					class="pointer-events-none h-fit lg-w-fit text-center sm-text-left break-words px-4 rounded bg-blue-500/10 w-full lg-min-w-[6ch] min-h-1.375em sm-h-130px"
 				>
-					{#if digits}
-						{formatted}<span aria-hidden="true" class="caret"></span>
-					{:else}
-						<span aria-hidden="true" class="caret"></span><span
-							class="opacity-50 italic whitespace-nowrap text-17px"
-							>Tap to type any number here.</span
-						>
-					{/if}
+					{formatted}<span aria-hidden="true" class="caret"></span>
 				</div>
 			</div>
 		</div>
@@ -234,8 +226,7 @@ function speakOutput() {
 				<div class="inline-flex justify-center">
 					<button
 						aria-label="read number aloud"
-						class="rounded-full border border-blue-400 text-blue-400 px-4 py-1  flex items-center gap-x-2 hover:bg-blue-400/10 transition-colors disabled:opacity-30 disabled:hover:bg-transparent border"
-						disabled={!digits}
+						class="rounded-full border border-blue-400 text-blue-400 px-4 py-1  flex items-center gap-x-2 hover:bg-blue-400/10 transition-colors border"
 						onclick={speakOutput}
 					>
 						<!-- <span aria-hidden="true">🔊</span> -->
