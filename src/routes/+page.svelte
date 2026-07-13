@@ -249,6 +249,16 @@ function speakOutput() {
 				>
 					+1
 				</button>
+
+				<!-- mobile: opens the device keyboard; the tap gesture lets
+				     focus() summon it, unlike the page-load autofocus -->
+				<button
+					aria-label="open keyboard"
+					class="sm:hidden aspect-square w-2em h-2em flex-none rounded-full border flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
+					onclick={() => inputEl?.focus()}
+				>
+					<span aria-hidden="true">⌨️</span>
+				</button>
 			</div>
 		</div>
 	</div>

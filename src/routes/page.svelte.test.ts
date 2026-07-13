@@ -132,6 +132,17 @@ describe("home page", () => {
 		expect(getInput()).toHaveFocus();
 	});
 
+	it("focuses the input via the keyboard button", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		getInput().blur();
+		expect(getInput()).not.toHaveFocus();
+
+		await user.click(screen.getByRole("button", { name: "open keyboard" }));
+		expect(getInput()).toHaveFocus();
+	});
+
 	it("shows an inviting placeholder when empty", async () => {
 		const user = userEvent.setup();
 		render(Page);
