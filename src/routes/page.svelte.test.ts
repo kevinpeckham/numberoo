@@ -1,4 +1,4 @@
-// Component tests for the home page — typing, the keypad, and derived output.
+// Component tests for the home page — typing, the controls, and derived output.
 
 import Page from "./+page.svelte";
 
@@ -79,38 +79,42 @@ describe("home page", () => {
 		expect(screen.getByText(/one hundred twenty-three/)).toBeInTheDocument();
 	});
 
-	it("appends digits from the keypad, including zero", async () => {
+	it("accepts digits typed anywhere on the page", async () => {
 		const user = userEvent.setup();
 		render(Page);
 
-		await user.click(screen.getByRole("button", { name: "7" }));
-		await user.click(screen.getByRole("button", { name: "0" }));
+		// move focus away from the input; typing should still register
+		getInput().blur();
+		document.body.focus();
+		await user.keyboard("70");
 
 		expect(getInput()).toHaveValue("70");
 		expect(screen.getByText(/seventy/)).toBeInTheDocument();
 		expect(screen.getByText(/# digits: 2/)).toBeInTheDocument();
 	});
 
-	it("keypad and typing share the same state", async () => {
-		const user = userEvent.setup();
-		render(Page);
-
-		await user.type(getInput(), "12");
-		await user.click(screen.getByRole("button", { name: "3" }));
-
-		expect(getInput()).toHaveValue("123");
-		expect(screen.getByText(/one hundred twenty-three/)).toBeInTheDocument();
-	});
-
-	it("backspace removes the last digit and recomputes", async () => {
+	it("handles backspace typed anywhere on the page", async () => {
 		const user = userEvent.setup();
 		render(Page);
 
 		await user.type(getInput(), "42");
-		await user.click(screen.getByRole("button", { name: "backspace" }));
+		getInput().blur();
+		document.body.focus();
+		await user.keyboard("{Backspace}");
 
 		expect(getInput()).toHaveValue("4");
 		expect(screen.getByText(/# digits: 1/)).toBeInTheDocument();
+	});
+
+	it("shows a blinking caret while the input is focused", async () => {
+		const { container } = render(Page);
+
+		// autofocused on load -> caret visible
+		expect(container.querySelector(".caret")).toBeInTheDocument();
+
+		getInput().blur();
+		await Promise.resolve();
+		expect(container.querySelector(".caret")).not.toBeInTheDocument();
 	});
 
 	it("clear empties the input and resets the count", async () => {
@@ -133,10 +137,14 @@ describe("home page", () => {
 		const user = userEvent.setup();
 		render(Page);
 
-		expect(screen.getByText("type any number")).toBeInTheDocument();
+		expect(
+			screen.getByText("Tap to type any number here."),
+		).toBeInTheDocument();
 
 		await user.type(getInput(), "5");
-		expect(screen.queryByText("type any number")).not.toBeInTheDocument();
+		expect(
+			screen.queryByText("Tap to type any number here."),
+		).not.toBeInTheDocument();
 	});
 
 	it("increments the number with +1", async () => {
@@ -187,7 +195,7 @@ describe("home page", () => {
 
 		await user.type(getInput(), "42");
 		synthMock.speaking = true;
-		await user.click(screen.getByRole("button", { name: "1" }));
+		await user.type(getInput(), "1");
 
 		expect(synthMock.cancel).toHaveBeenCalled();
 		expect(getInput()).toHaveValue("421");

@@ -21,6 +21,9 @@ const atMaxDigits = $derived(digitCount >= MAX_DIGITS);
 // refs
 let inputEl: HTMLTextAreaElement | undefined = $state();
 
+// focus state drives the shim's blinking caret
+let inputFocused = $state(false);
+
 // keep the field focused on load so the keyboard is ready --
 // especially the native keyboard on mobile
 $effect(() => {
@@ -78,6 +81,27 @@ function backspace() {
 	inputEl?.focus();
 }
 
+// desktop: typing anywhere on the page feeds the input,
+// no need to focus the field first
+function onWindowKeydown(e: KeyboardEvent) {
+	if (e.metaKey || e.ctrlKey || e.altKey) return;
+	if (e.target === inputEl) return;
+	// don't steal Enter/Space from focused buttons
+	const target = e.target as HTMLElement | null;
+	if (
+		target instanceof HTMLButtonElement &&
+		(e.key === "Enter" || e.key === " ")
+	)
+		return;
+	if (/^[0-9]$/.test(e.key)) {
+		e.preventDefault();
+		appendDigit(e.key);
+	} else if (e.key === "Backspace") {
+		e.preventDefault();
+		backspace();
+	}
+}
+
 function clear() {
 	setDigits("");
 	inputEl?.focus();
@@ -114,6 +138,8 @@ function speakOutput() {
 	synth.speak(new SpeechSynthesisUtterance(output));
 }
 </script>
+
+<svelte:window onkeydown={onWindowKeydown} />
 
 <svelte:head>
 	<title>Numberoo</title>
@@ -155,15 +181,22 @@ function speakOutput() {
 					placeholder="type any number"
 					oninput={onInput}
 					onkeydown={onKeydown}
+					onfocus={() => (inputFocused = true)}
+					onblur={() => (inputFocused = false)}
 					value={formatted}
 				></textarea>
 				<div
 					class="pointer-events-none h-fit lg-w-fit text-center sm-text-left break-words px-4 rounded bg-blue-500/10 w-full lg-min-w-[6ch] min-h-1.375em sm-h-130px"
 				>
 					{#if digits}
-						{formatted}
+						{formatted}{#if inputFocused}<span
+								aria-hidden="true"
+								class="caret"
+							></span>{/if}
 					{:else}
-						<span class="opacity-50 italic whitespace-nowrap text-17px"
+						{#if inputFocused}<span aria-hidden="true" class="caret"
+							></span>{/if}<span
+							class="opacity-50 italic whitespace-nowrap text-17px"
 							>Tap to type any number here.</span
 						>
 					{/if}
@@ -173,19 +206,6 @@ function speakOutput() {
 
 		<!-- output -->
 		<div class="text-[26px] text-center text-blue-400 h-full max-h-full overflow-y-scroll">&nbsp;{output}&nbsp;</div>
-
-		<!-- read aloud -->
-		<!-- <div class="lg-flex justify-center pt-2 hidden">
-			<button
-				aria-label="read number aloud"
-				class="rounded-full border border-blue-400 text-blue-400 px-4 py-1 text-[15px] flex items-center gap-x-2 hover:bg-blue-400/10 transition-colors disabled:opacity-30 disabled:hover:bg-transparent border-[0.065em]"
-				disabled={!digits}
-				onclick={speakOutput}
-			>
-				<span aria-hidden="true">🔊</span>
-				<span>read aloud</span>
-			</button>
-		</div> -->
 
 		<!-- digit counter -->
 		<div
@@ -204,47 +224,6 @@ function speakOutput() {
 		<div
 			class="flex flex-col w-full max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-y-2"
 		>
-			<!-- digit keypad: hidden on mobile, where the native keyboard handles entry -->
-			<div
-				class="hidden grid-cols-3 w-full place-content-end bg-primary gap-2 sm:gap-x-4 sm:gap-y-2"
-			>
-			{#each Array(9) as _, index}
-				<button
-					class="rounded-full border aspect-square flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.5em]"
-					onclick={() => appendDigit(`${index + 1}`)}
-				>
-					{index + 1}
-				</button>
-			{/each}
-
-			<!-- backspace -->
-			<button
-				aria-label="backspace"
-				class="text-red-500 rounded-full border border-red-500 aspect-square flex justify-center items-center hover:bg-red-500/5 transition-colors active:bg-red-500 border-[0.065em] text-[1.5em]"
-				onclick={backspace}
-			>
-				{"<"}
-			</button>
-
-			<!-- zero -->
-			<button
-				class="rounded-full border aspect-square flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.5em]"
-				onclick={() => appendDigit("0")}
-			>
-				0
-			</button>
-
-			<!-- clear -->
-			<button
-				aria-label="clear"
-				class="text-red-500 rounded-full border border-red-500 aspect-square flex justify-center items-center hover:bg-red-500/5 transition-colors active:bg-red-500 border-[0.065em] text-[1.5em]"
-				onclick={clear}
-			>
-				{"c"}
-			</button>
-			</div>
-
-
 			<!-- increment / decrement -->
 			<div class="flex justify-center gap-4 sm:gap-x-4 text-1.25em">
 				<button
@@ -274,7 +253,7 @@ function speakOutput() {
 				</div>
 				<button
 					aria-label="add one"
-					class="aspect-square 2-2em h-2em flex-none rounded-full border py-1 flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
+					class="aspect-square w-2em h-2em flex-none rounded-full border py-1 flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
 					onclick={() => addToNumber(1n)}
 				>
 					+1
@@ -283,3 +262,22 @@ function speakOutput() {
 		</div>
 	</div>
 </main>
+
+<style>
+	/* blinking caret shown in the display shim, since the real
+	   textarea is transparent and its native caret is invisible */
+	.caret {
+		display: inline-block;
+		width: 0.06em;
+		height: 1em;
+		margin-left: 0.04em;
+		background: currentColor;
+		vertical-align: -0.1em;
+		animation: caret-blink 1.1s steps(2, start) infinite;
+	}
+	@keyframes caret-blink {
+		to {
+			visibility: hidden;
+		}
+	}
+</style>
