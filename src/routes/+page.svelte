@@ -21,10 +21,15 @@ const atMaxDigits = $derived(digitCount >= MAX_DIGITS);
 // refs
 let inputEl: HTMLTextAreaElement | undefined = $state();
 
+// desktop: when the browser window itself isn't focused the page looks
+// ready for input but isn't -- track it so we can hint the user
+let windowFocused = $state(true);
+
 // keep the field focused on load so the keyboard is ready --
 // especially the native keyboard on mobile
 $effect(() => {
 	inputEl?.focus();
+	windowFocused = document.hasFocus();
 });
 
 // stop any in-progress speech; reading a stale number is confusing
@@ -136,7 +141,11 @@ function speakOutput() {
 }
 </script>
 
-<svelte:window onkeydown={onWindowKeydown} />
+<svelte:window
+	onkeydown={onWindowKeydown}
+	onfocus={() => (windowFocused = true)}
+	onblur={() => (windowFocused = false)}
+/>
 
 <svelte:head>
 	<title>Numberoo</title>
@@ -182,10 +191,20 @@ function speakOutput() {
 				<div
 					class="pointer-events-none h-fit text-center sm-text-left break-words px-4 rounded bg-blue-500/10 w-full lg-min-w-[6ch] min-h-1.375em sm-h-130px"
 				>
-					{formatted}<span aria-hidden="true" class="caret"></span>
+					{formatted}<span
+						aria-hidden="true"
+						class="caret {windowFocused ? '' : 'caret-idle'}"
+					></span>
 				</div>
 			</div>
 		</div>
+
+		<!-- window-focus reminder -->
+		{#if !windowFocused}
+			<div class="text-center text-accent text-15px animate-pulse pb-2">
+				👆 click anywhere on the page to continue typing
+			</div>
+		{/if}
 
 		<!-- output -->
 		<div class="text-[26px] text-center text-blue-400 h-full max-h-full overflow-y-scroll w-full lg-text-left">&nbsp;{output}&nbsp;</div>
@@ -271,5 +290,10 @@ function speakOutput() {
 		to {
 			visibility: hidden;
 		}
+	}
+	/* steady, dimmed caret while the browser window is unfocused */
+	.caret-idle {
+		animation: none;
+		opacity: 0.35;
 	}
 </style>

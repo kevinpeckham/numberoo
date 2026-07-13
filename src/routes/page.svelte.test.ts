@@ -2,7 +2,7 @@
 
 import Page from "./+page.svelte";
 
-import { render, screen } from "@testing-library/svelte";
+import { fireEvent, render, screen } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -141,6 +141,20 @@ describe("home page", () => {
 	it("focuses the input on load", () => {
 		render(Page);
 		expect(getInput()).toHaveFocus();
+	});
+
+	it("reminds the user to click when the window loses focus", async () => {
+		const { container } = render(Page);
+
+		expect(screen.queryByText(/click anywhere/)).not.toBeInTheDocument();
+
+		await fireEvent.blur(window);
+		expect(screen.getByText(/click anywhere/)).toBeInTheDocument();
+		expect(container.querySelector(".caret-idle")).toBeInTheDocument();
+
+		await fireEvent.focus(window);
+		expect(screen.queryByText(/click anywhere/)).not.toBeInTheDocument();
+		expect(container.querySelector(".caret-idle")).not.toBeInTheDocument();
 	});
 
 	it("focuses the input via the keyboard button", async () => {
