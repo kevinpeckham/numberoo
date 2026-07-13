@@ -318,7 +318,7 @@ function speakOutput() {
 	     the input for good measure -->
 	{#if !windowFocused}
 		<div
-			class="hidden sm:flex fixed inset-0 z-50 flex-col items-center justify-center gap-y-6 bg-primary/60 backdrop-blur-sm text-center"
+			class="focus-overlay fixed inset-0 z-50 flex-col items-center justify-center gap-y-6 bg-primary/60 backdrop-blur-sm text-center"
 		>
 			<div class="text-20px">Click below to continue.</div>
 			<button
@@ -352,5 +352,16 @@ function speakOutput() {
 	.caret-idle {
 		animation: none;
 		opacity: 0.35;
+	}
+	/* the window-focus overlay is only useful on devices with a mouse or
+	   trackpad; on phones and tablets the native keyboard steals window
+	   focus and would pop it constantly */
+	.focus-overlay {
+		display: none;
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.focus-overlay {
+			display: flex;
+		}
 	}
 </style>
