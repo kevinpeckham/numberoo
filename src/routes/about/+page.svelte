@@ -18,13 +18,13 @@
 		<p class="mb-4">
 			Numberoo began with a kindergartner's question: <em
 				>how big can numbers get?</em
-			> Leo came home from school fascinated by the googol — a one followed by one
-			hundred zeros — and he wanted to see it. Not hear about it. See it, hear its
+			> Leo came home from school fascinated by the googol (a one followed by one
+			hundred zeros) and he wanted to see it. Not hear about it. See it, hear its
 			name said out loud, and then change one digit and hear the new name.
 		</p>
 
 		<p class="mb-4">
-			So we built him this toy. Type digits and the page names the number in
+			So I built him this toy. Type digits and the page names the number in
 			English, all the way up to one googol, and reads it aloud if you press the
 			button. It is the smallest open-source project we maintain: a single page
 			and a single utility module.
