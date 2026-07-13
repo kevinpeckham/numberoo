@@ -106,15 +106,14 @@ describe("home page", () => {
 		expect(screen.getByText(/# digits: 1/)).toBeInTheDocument();
 	});
 
-	it("shows a blinking caret while the input is focused", async () => {
+	it("always shows the blinking caret, focused or not", async () => {
 		const { container } = render(Page);
 
-		// autofocused on load -> caret visible
 		expect(container.querySelector(".caret")).toBeInTheDocument();
 
 		getInput().blur();
 		await Promise.resolve();
-		expect(container.querySelector(".caret")).not.toBeInTheDocument();
+		expect(container.querySelector(".caret")).toBeInTheDocument();
 	});
 
 	it("clear empties the input and resets the count", async () => {

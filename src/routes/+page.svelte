@@ -21,9 +21,6 @@ const atMaxDigits = $derived(digitCount >= MAX_DIGITS);
 // refs
 let inputEl: HTMLTextAreaElement | undefined = $state();
 
-// focus state drives the shim's blinking caret
-let inputFocused = $state(false);
-
 // keep the field focused on load so the keyboard is ready --
 // especially the native keyboard on mobile
 $effect(() => {
@@ -181,21 +178,15 @@ function speakOutput() {
 					placeholder="type any number"
 					oninput={onInput}
 					onkeydown={onKeydown}
-					onfocus={() => (inputFocused = true)}
-					onblur={() => (inputFocused = false)}
 					value={formatted}
 				></textarea>
 				<div
 					class="pointer-events-none h-fit lg-w-fit text-center sm-text-left break-words px-4 rounded bg-blue-500/10 w-full lg-min-w-[6ch] min-h-1.375em sm-h-130px"
 				>
 					{#if digits}
-						{formatted}{#if inputFocused}<span
-								aria-hidden="true"
-								class="caret"
-							></span>{/if}
+						{formatted}<span aria-hidden="true" class="caret"></span>
 					{:else}
-						{#if inputFocused}<span aria-hidden="true" class="caret"
-							></span>{/if}<span
+						<span aria-hidden="true" class="caret"></span><span
 							class="opacity-50 italic whitespace-nowrap text-17px"
 							>Tap to type any number here.</span
 						>
