@@ -156,23 +156,30 @@ function speakOutput() {
 </svelte:head>
 
 <main
-	class="relative grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen min-h-screen w-screen items-start page-x-padding sm-py-4 place-content-start gap-y-2 sm-gap-y-4"
+	class="relative grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen min-h-screen w-screen items-start page-x-padding py-3 sm-py-4 place-content-start gap-y-1 sm-gap-y-4"
 >
-	<header class="pt-4 lg-flex items-baseline gap-x-4">
-		<h1 class="inline-block align-middle text-20px font-bold text-blue-300 mb-2">
+	<header class="grid grid-cols-[auto_auto_1fr] lg-flex items-baseline lg-items-baseline gap-x-2 sm-gap-x-4">
+		<h1 class="inline-block text-20px font-bold text-blue-300 mb-2 leading-none">
 			Numberoo
 		</h1>
 		<!-- mobile: info-style link to the about page -->
 		<a
 			aria-label="About Numberoo"
-			class="sm:hidden inline-flex align-middle ml-2 w-18px h-18px rounded-full border border-neutral-100/60 text-neutral-100/80 text-12px justify-center items-center hover:text-accent hover:border-accent transition-colors"
+			class="sm:hidden flex w-16px h-16px rounded-full border border-neutral-100/60 text-neutral-100/80 text-12px justify-center items-center hover:text-accent hover:border-accent transition-colors leading-none"
 			href="/about">?</a
 		>
-		<div class="hidden opacity-95 italic sm:block">
+		<div class="hidden opacity-95 italic leading-none sm:block">
 			read and spell numbers up to <button
 				class="italic hover:text-blue-300 hover:underline underline-offset-4 transition-colors"
 				onclick={loadGoogol}>one googol</button
 			>
+		</div>
+		<div
+			class="text-right {atMaxDigits
+				? 'text-red-400 font-bold'
+				: 'opacity-80'}"
+		>
+			# digits: {digitCount}{#if atMaxDigits}&nbsp;(max){/if}
 		</div>
 	</header>
 
@@ -211,13 +218,13 @@ function speakOutput() {
 		<div class="text-[26px] text-center text-blue-400 h-full max-h-full overflow-y-scroll w-full lg-text-left">&nbsp;{output}&nbsp;</div>
 
 		<!-- digit counter -->
-		<div
-			class=" lg-block absolute top-5 right-4 text-right {atMaxDigits
+		<!-- <div
+			class="absolute top-8 right-0 page-x-padding !pl-0 text-right {atMaxDigits
 				? 'text-red-400 font-bold'
 				: 'text-yellow-600'}"
 		>
 			# digits: {digitCount}{#if atMaxDigits}&nbsp;(max){/if}
-		</div>
+		</div> -->
 	</div>
 
 	<!-- right column: keypad -->
@@ -291,8 +298,8 @@ function speakOutput() {
 
 	<!-- desktop: about link pinned bottom right, above the footer -->
 	<a
-		class="hidden sm:block absolute bottom-10 right-4 text-15px text-neutral-100/70 hover:text-accent hover:underline underline-offset-4 transition-colors"
-		href="/about">About</a
+		class="hidden sm:block absolute bottom-4 right-4 text-15px text-white opacity-70 hover-opacity-100 underline underline-offset-4"
+		href="/about">about</a
 	>
 
 	<!-- window-focus overlay: any click returns focus to the window, which

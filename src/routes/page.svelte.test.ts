@@ -44,7 +44,7 @@ describe("home page", () => {
 	it("links to the about page for desktop and mobile", () => {
 		render(Page);
 		// desktop text link + mobile "?" icon link
-		expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
+		expect(screen.getByRole("link", { name: "about" })).toHaveAttribute(
 			"href",
 			"/about",
 		);
