@@ -318,7 +318,7 @@ function speakOutput() {
 	     the input for good measure -->
 	{#if !windowFocused}
 		<div
-			class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-y-6 bg-primary/60 backdrop-blur-sm text-center"
+			class="hidden sm:flex fixed inset-0 z-50 flex-col items-center justify-center gap-y-6 bg-primary/60 backdrop-blur-sm text-center"
 		>
 			<div class="text-20px">Click below to continue.</div>
 			<button
