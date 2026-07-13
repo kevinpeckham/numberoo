@@ -266,12 +266,20 @@ function speakOutput() {
 		</div>
 	</div>
 
-	<!-- window-focus reminder: fixed overlay so it never shifts the layout -->
+	<!-- window-focus overlay: any click returns focus to the window, which
+	     dismisses it; the button is the visual affordance and re-focuses
+	     the input for good measure -->
 	{#if !windowFocused}
 		<div
-			class="fixed inset-x-0 bottom-16 text-center text-accent text-15px animate-pulse pointer-events-none"
+			class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-y-6 bg-primary/60 backdrop-blur-sm text-center"
 		>
-			👆 click anywhere on the page to continue typing
+			<div class="text-20px">Click below to continue.</div>
+			<button
+				class="rounded-full bg-accent text-primary font-bold px-8 py-2 text-17px hover:opacity-90 transition-opacity"
+				onclick={() => inputEl?.focus()}
+			>
+				Continue
+			</button>
 		</div>
 	{/if}
 </main>

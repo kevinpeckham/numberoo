@@ -143,17 +143,27 @@ describe("home page", () => {
 		expect(getInput()).toHaveFocus();
 	});
 
-	it("reminds the user to click when the window loses focus", async () => {
+	it("shows a continue overlay when the window loses focus", async () => {
+		const user = userEvent.setup();
 		const { container } = render(Page);
 
-		expect(screen.queryByText(/click anywhere/)).not.toBeInTheDocument();
+		expect(
+			screen.queryByText(/Click below to continue/),
+		).not.toBeInTheDocument();
 
 		await fireEvent.blur(window);
-		expect(screen.getByText(/click anywhere/)).toBeInTheDocument();
+		expect(screen.getByText(/Click below to continue/)).toBeInTheDocument();
 		expect(container.querySelector(".caret-idle")).toBeInTheDocument();
 
+		// the continue button re-focuses the input
+		getInput().blur();
+		await user.click(screen.getByRole("button", { name: "Continue" }));
+		expect(getInput()).toHaveFocus();
+
 		await fireEvent.focus(window);
-		expect(screen.queryByText(/click anywhere/)).not.toBeInTheDocument();
+		expect(
+			screen.queryByText(/Click below to continue/),
+		).not.toBeInTheDocument();
 		expect(container.querySelector(".caret-idle")).not.toBeInTheDocument();
 	});
 
