@@ -180,7 +180,7 @@ function speakOutput() {
 					value={formatted}
 				></textarea>
 				<div
-					class="pointer-events-none h-fit lg-w-fit text-center sm-text-left break-words px-4 rounded bg-blue-500/10 w-full lg-min-w-[6ch] min-h-1.375em sm-h-130px"
+					class="pointer-events-none h-fit text-center sm-text-left break-words px-4 rounded bg-blue-500/10 w-full lg-min-w-[6ch] min-h-1.375em sm-h-130px"
 				>
 					{formatted}<span aria-hidden="true" class="caret"></span>
 				</div>
@@ -188,7 +188,7 @@ function speakOutput() {
 		</div>
 
 		<!-- output -->
-		<div class="text-[26px] text-center text-blue-400 h-full max-h-full overflow-y-scroll">&nbsp;{output}&nbsp;</div>
+		<div class="text-[26px] text-center text-blue-400 h-full max-h-full overflow-y-scroll w-full lg-text-left">&nbsp;{output}&nbsp;</div>
 
 		<!-- digit counter -->
 		<div
