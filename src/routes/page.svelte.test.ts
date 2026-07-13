@@ -124,6 +124,21 @@ describe("home page", () => {
 		expect(screen.getByText(/# digits: 0/)).toBeInTheDocument();
 	});
 
+	it("focuses the input on load", () => {
+		render(Page);
+		expect(getInput()).toHaveFocus();
+	});
+
+	it("shows an inviting placeholder when empty", async () => {
+		const user = userEvent.setup();
+		render(Page);
+
+		expect(screen.getByText("type any number")).toBeInTheDocument();
+
+		await user.type(getInput(), "5");
+		expect(screen.queryByText("type any number")).not.toBeInTheDocument();
+	});
+
 	it("increments the number with +1", async () => {
 		const user = userEvent.setup();
 		render(Page);

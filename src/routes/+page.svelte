@@ -21,6 +21,12 @@ const atMaxDigits = $derived(digitCount >= MAX_DIGITS);
 // refs
 let inputEl: HTMLTextAreaElement | undefined = $state();
 
+// keep the field focused on load so the keyboard is ready --
+// especially the native keyboard on mobile
+$effect(() => {
+	inputEl?.focus();
+});
+
 // stop any in-progress speech; reading a stale number is confusing
 function stopSpeech() {
 	if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
@@ -138,13 +144,15 @@ function speakOutput() {
 			<div
 				class="relative align-text-bottom text-[24px] flex justify-center items-end h-full leading-snug sm:text-[36px] max-w-[90vw]"
 			>
+				<!-- svelte-ignore a11y_autofocus -->
 				<textarea
 					aria-label="input number"
 					autocomplete="off"
+					autofocus
 					bind:this={inputEl}
-					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full border-white/20 outline-none min-h-[1em] placeholder:whitespace-nowrap placeholder:text-[18px]"
+					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full border-white/20 outline-none min-h-[1em]"
 					inputmode="numeric"
-					placeholder="enter number"
+					placeholder="type any number"
 					oninput={onInput}
 					onkeydown={onKeydown}
 					style="resize:none; min-width:6ch; min-height:1em;"
@@ -153,7 +161,13 @@ function speakOutput() {
 				<div
 					class="pointer-events-none align-text-bottom h-fit w-fit text-center break-words px-4 rounded bg-blue-500/10 min-w-[6ch] min-h-[1.375em]"
 				>
-					{formatted}
+					{#if digits}
+						{formatted}
+					{:else}
+						<span class="opacity-50 italic whitespace-nowrap"
+							>type any number</span
+						>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -191,8 +205,9 @@ function speakOutput() {
 		<div
 			class="flex flex-col w-full max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-y-2"
 		>
+			<!-- digit keypad: hidden on mobile, where the native keyboard handles entry -->
 			<div
-				class="grid grid-cols-3 w-full place-content-end bg-primary gap-2 sm:gap-x-4 sm:gap-y-2"
+				class="hidden sm:grid grid-cols-3 w-full place-content-end bg-primary gap-2 sm:gap-x-4 sm:gap-y-2"
 			>
 			{#each Array(9) as _, index}
 				<button
