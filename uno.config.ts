@@ -41,4 +41,6 @@ export default defineConfig({
 		["dominant-baseline-central", { "dominant-baseline": "central" }],
 		["dominant-baseline-hanging", { "dominant-baseline": "hanging" }],
 	],
+	shortcuts: 	[["page-x-padding", "px-4 sm:px-6 md:px-7 lg:px-8 xl:px-16 2xl:px-24"]]
+
 });

@@ -124,25 +124,25 @@ function speakOutput() {
 </svelte:head>
 
 <main
-	class="relative grid grid-cols-1 min-h-screen p-2 w-screen items-start pt-0 sm:p-4 sm:pt-24 sm:place-content-start"
+	class="relative grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen min-h-screen w-screen items-start page-x-padding sm-py-4 place-content-start gap-y-2 sm-gap-y-4"
 >
-	<div class="mb-4 pt-4 sm:pl-8 sm:absolute sm:flex items-baseline gap-x-4">
-		<h1 class="text-3xl font-bold text-blue-300 mb-2">Numberoo</h1>
+	<header class="pt-4 lg-flex items-baseline gap-x-4">
+		<h1 class="text-20px font-bold text-blue-300 mb-2">Numberoo</h1>
 		<div class="hidden opacity-95 italic sm:block">
 			read and spell numbers up to <button
 				class="italic hover:text-blue-300 hover:underline underline-offset-4 transition-colors"
 				onclick={loadGoogol}>one googol</button
 			>
 		</div>
-	</div>
+	</header>
 
 	<!-- left column -->
-	<div class="col-span-3">
+	<div class="col-span-3 h-full w-full max-h-full grid grid-cols-1  place-content-start grid-rows-[auto_1fr_auto] sm-grid-rows-[auto_1fr_auto]">
 		<!-- input -->
 		<div class="w-full flex justify-center text-center pb-4 h-auto min-h-[1em]">
 			<!-- container -->
 			<div
-				class="relative align-text-bottom text-[24px] flex justify-center items-end h-full leading-snug sm:text-[36px] max-w-[90vw]"
+				class="relative align-text-bottom text-[24px] flex justify-center items-end h-full leading-snug sm:text-[32px] max-w-full w-full"
 			>
 				<!-- svelte-ignore a11y_autofocus -->
 				<textarea
@@ -150,22 +150,21 @@ function speakOutput() {
 					autocomplete="off"
 					autofocus
 					bind:this={inputEl}
-					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full border-white/20 outline-none min-h-[1em]"
+					class="opacity-0 absolute bg-transparent text-white text-center h-full w-full border-white/20 outline-none resize-none min-w-full min-w-1em leading-snug"
 					inputmode="numeric"
 					placeholder="type any number"
 					oninput={onInput}
 					onkeydown={onKeydown}
-					style="resize:none; min-width:6ch; min-height:1em;"
 					value={formatted}
 				></textarea>
 				<div
-					class="pointer-events-none align-text-bottom h-fit w-fit text-center break-words px-4 rounded bg-blue-500/10 min-w-[6ch] min-h-[1.375em]"
+					class="pointer-events-none h-fit lg-w-fit text-center sm-text-left break-words px-4 rounded bg-blue-500/10 w-full lg-min-w-[6ch] min-h-1.375em sm-h-130px"
 				>
 					{#if digits}
 						{formatted}
 					{:else}
-						<span class="opacity-50 italic whitespace-nowrap"
-							>type any number</span
+						<span class="opacity-50 italic whitespace-nowrap text-17px"
+							>Tap to type any number here.</span
 						>
 					{/if}
 				</div>
@@ -173,10 +172,10 @@ function speakOutput() {
 		</div>
 
 		<!-- output -->
-		<div class="text-[26px] text-center text-blue-400">&nbsp;{output}&nbsp;</div>
+		<div class="text-[26px] text-center text-blue-400 h-full max-h-full overflow-y-scroll">&nbsp;{output}&nbsp;</div>
 
 		<!-- read aloud -->
-		<div class="flex justify-center pt-2">
+		<!-- <div class="lg-flex justify-center pt-2 hidden">
 			<button
 				aria-label="read number aloud"
 				class="rounded-full border border-blue-400 text-blue-400 px-4 py-1 text-[15px] flex items-center gap-x-2 hover:bg-blue-400/10 transition-colors disabled:opacity-30 disabled:hover:bg-transparent border-[0.065em]"
@@ -186,11 +185,11 @@ function speakOutput() {
 				<span aria-hidden="true">🔊</span>
 				<span>read aloud</span>
 			</button>
-		</div>
+		</div> -->
 
 		<!-- digit counter -->
 		<div
-			class="absolute bottom-8 pl-4 {atMaxDigits
+			class=" lg-block absolute top-5 right-4 text-right {atMaxDigits
 				? 'text-red-400 font-bold'
 				: 'text-yellow-600'}"
 		>
@@ -200,14 +199,14 @@ function speakOutput() {
 
 	<!-- right column: keypad -->
 	<div
-		class="w-full flex justify-center items-end pb-16 sm:absolute sm:bottom-0 sm:right-0 sm:pb-24 sm:items-end"
+		class="w-full flex justify-center items-end lg-pb-16 sm:absolute sm:bottom-0 sm:right-0 pb-4 sm:pb-24 sm:items-end"
 	>
 		<div
 			class="flex flex-col w-full max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-y-2"
 		>
 			<!-- digit keypad: hidden on mobile, where the native keyboard handles entry -->
 			<div
-				class="hidden sm:grid grid-cols-3 w-full place-content-end bg-primary gap-2 sm:gap-x-4 sm:gap-y-2"
+				class="hidden grid-cols-3 w-full place-content-end bg-primary gap-2 sm:gap-x-4 sm:gap-y-2"
 			>
 			{#each Array(9) as _, index}
 				<button
@@ -245,18 +244,37 @@ function speakOutput() {
 			</button>
 			</div>
 
+
 			<!-- increment / decrement -->
-			<div class="flex gap-2 sm:gap-x-4">
+			<div class="flex justify-center gap-4 sm:gap-x-4 text-1.25em">
 				<button
 					aria-label="subtract one"
-					class="flex-1 rounded-full border py-1 flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.25em]"
+					class="aspect-square w-2em h-2em flex-none rounded-full border flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
 					onclick={() => addToNumber(-1n)}
 				>
 					-1
 				</button>
 				<button
+					aria-label="clear"
+					class="w-2em h-2em flex-none text-red-500 rounded-full border border-red-500 aspect-square flex justify-center items-center hover:bg-red-500/5 transition-colors active:bg-red-500 border"
+					onclick={clear}
+				>
+					c
+				</button>
+				<div class="inline-flex justify-center">
+					<button
+						aria-label="read number aloud"
+						class="rounded-full border border-blue-400 text-blue-400 px-4 py-1  flex items-center gap-x-2 hover:bg-blue-400/10 transition-colors disabled:opacity-30 disabled:hover:bg-transparent border"
+						disabled={!digits}
+						onclick={speakOutput}
+					>
+						<!-- <span aria-hidden="true">🔊</span> -->
+						<span>read</span>
+					</button>
+				</div>
+				<button
 					aria-label="add one"
-					class="flex-1 rounded-full border py-1 flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border-[0.065em] text-[1.25em]"
+					class="aspect-square 2-2em h-2em flex-none rounded-full border py-1 flex justify-center items-center hover:bg-white/5 transition-colors active:bg-white border"
 					onclick={() => addToNumber(1n)}
 				>
 					+1

@@ -14,7 +14,7 @@ let { children }: Props = $props();
 {@render children?.()}
 
 <footer
-	class="fixed bottom-0 right-0 p-4 text-right text-[13px] text-neutral-100/60"
+	class="hidden lg-fixed bottom-0 right-0 p-4 text-right text-[13px] text-neutral-100/60"
 >
 	Made by Kevin Peckham @
 	<a
