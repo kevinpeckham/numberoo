@@ -159,7 +159,15 @@ function speakOutput() {
 	class="relative grid grid-cols-1 grid-rows-[auto_1fr_auto] h-screen min-h-screen w-screen items-start page-x-padding sm-py-4 place-content-start gap-y-2 sm-gap-y-4"
 >
 	<header class="pt-4 lg-flex items-baseline gap-x-4">
-		<h1 class="text-20px font-bold text-blue-300 mb-2">Numberoo</h1>
+		<h1 class="inline-block align-middle text-20px font-bold text-blue-300 mb-2">
+			Numberoo
+		</h1>
+		<!-- mobile: info-style link to the about page -->
+		<a
+			aria-label="About Numberoo"
+			class="sm:hidden inline-flex align-middle ml-2 w-18px h-18px rounded-full border border-neutral-100/60 text-neutral-100/80 text-12px justify-center items-center hover:text-accent hover:border-accent transition-colors"
+			href="/about">?</a
+		>
 		<div class="hidden opacity-95 italic sm:block">
 			read and spell numbers up to <button
 				class="italic hover:text-blue-300 hover:underline underline-offset-4 transition-colors"
@@ -280,6 +288,12 @@ function speakOutput() {
 			</div>
 		</div>
 	</div>
+
+	<!-- desktop: about link pinned bottom right, above the footer -->
+	<a
+		class="hidden sm:block absolute bottom-10 right-4 text-15px text-neutral-100/70 hover:text-accent hover:underline underline-offset-4 transition-colors"
+		href="/about">About</a
+	>
 
 	<!-- window-focus overlay: any click returns focus to the window, which
 	     dismisses it; the button is the visual affordance and re-focuses

@@ -41,6 +41,18 @@ describe("home page", () => {
 		).toBeInTheDocument();
 	});
 
+	it("links to the about page for desktop and mobile", () => {
+		render(Page);
+		// desktop text link + mobile "?" icon link
+		expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
+			"href",
+			"/about",
+		);
+		expect(
+			screen.getByRole("link", { name: "About Numberoo" }),
+		).toHaveAttribute("href", "/about");
+	});
+
 	it("starts with a visible zero", () => {
 		render(Page);
 		expect(getInput()).toHaveValue("0");
