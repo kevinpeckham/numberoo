@@ -229,10 +229,20 @@ function speakOutput() {
 
 	<!-- right column: keypad -->
 	<div
-		class="w-full flex justify-center items-end lg-pb-16 sm:absolute sm:bottom-0 sm:right-0 pb-4 sm:pb-24 sm:items-end"
+		class="
+		flex
+		justify-center
+		items-end
+		pb-4
+		w-full
+		lg-pb-16
+		lg-grid
+		lg-grid-cols-1
+		lg-place-items-center
+		lg-w-full"
 	>
 		<div
-			class="flex flex-col w-full max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-y-2"
+			class="flex flex-col w-full max-w-[60vw] sm:max-w-[20em] gap-2 sm:gap-y-2 lg-w-fit lg-max-w-screen"
 		>
 			<!-- increment / decrement -->
 			<div class="flex justify-center gap-4 sm:gap-x-4 text-1.25em">
@@ -294,6 +304,7 @@ function speakOutput() {
 				</button>
 			</div>
 		</div>
+		<div class="hidden lg-block italic opacity-80 text-center mt-5">or type numbers on your keyboard</div>
 	</div>
 
 	<!-- desktop: about link pinned bottom right, above the footer -->
