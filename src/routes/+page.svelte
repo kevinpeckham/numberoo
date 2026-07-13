@@ -199,13 +199,6 @@ function speakOutput() {
 			</div>
 		</div>
 
-		<!-- window-focus reminder -->
-		{#if !windowFocused}
-			<div class="text-center text-accent text-15px animate-pulse pb-2">
-				👆 click anywhere on the page to continue typing
-			</div>
-		{/if}
-
 		<!-- output -->
 		<div class="text-[26px] text-center text-blue-400 h-full max-h-full overflow-y-scroll w-full lg-text-left">&nbsp;{output}&nbsp;</div>
 
@@ -272,6 +265,15 @@ function speakOutput() {
 			</div>
 		</div>
 	</div>
+
+	<!-- window-focus reminder: fixed overlay so it never shifts the layout -->
+	{#if !windowFocused}
+		<div
+			class="fixed inset-x-0 bottom-16 text-center text-accent text-15px animate-pulse pointer-events-none"
+		>
+			👆 click anywhere on the page to continue typing
+		</div>
+	{/if}
 </main>
 
 <style>
